@@ -15,7 +15,7 @@ pub use peano::{N1, N2, N3, N4, N5, N6, N7, N8, N9};
 use peano::{Peano, ToInt};
 use std::marker::PhantomData;
 
-use std::ops::{Add, Sub, Mul, Div, Neg, BitAnd, BitOr, BitXor, FnOnce, Not, Rem, Shl, Shr};
+use std::ops::{Add, Sub, Mul, Div, Deref, Neg, BitAnd, BitOr, BitXor, FnOnce, Not, Rem, Shl, Shr};
 use num::traits::{Float, FromPrimitive, ToPrimitive, NumCast};
 use std::cmp::{Eq, PartialEq, Ord, PartialOrd, Ordering};
 use std::fmt;
@@ -50,6 +50,15 @@ pub trait DimToString: Dimension {
 /// This is the primary struct that users of this library will interact with.
 #[derive(Copy, Clone)]
 pub struct Dim<D: Dimension, V>(pub V, pub PhantomData<D>);
+
+impl<D: Dimension, V> Deref for Dim<D, V> {
+    type Target = V;
+
+    fn deref(&self) -> &V {
+        &self.0
+    }
+}
+
 
 impl<D: Dimension, V> Dim<D, V> {
     /**
@@ -735,4 +744,3 @@ impl<D, V> ::std::num::One for Dim<D, V> where D: Dimensionless + Mul<D>, V: ::s
 //         dim_unary_float!(integer_decode, (u64, i16, i8));
 
 //     }
-

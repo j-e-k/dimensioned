@@ -6,7 +6,6 @@ It will also define derived units, although this is not implemented yet.
 */
 
 #![allow(missing_docs)]
-
 make_units! {
     SI, Unitless, one;
     base {
@@ -19,6 +18,7 @@ make_units! {
         Mole, mole, mol;
     }
     derived {
-        newton: Newton = Kilogram * Meter / Second / Second;
+
     }
 }
+unit!(Newton = Kilogram * Meter / Second * Second);

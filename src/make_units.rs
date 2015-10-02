@@ -1,3 +1,14 @@
+#[macro_export]
+macro_rules! unit {
+    { $Ident:ident = $($RHS:tt)+ } => {pub type $Ident = Dim<unit!($($RHS)+), f64>;};
+    { ( $($LHS:tt)+ ) } => { unit!($($LHS)+) };
+    { $LHS:tt + $($RHS:tt)+ } => { <unit!($LHS) as Add<unit!($($RHS)+)>>::Output };
+    { $LHS:tt - $($RHS:tt)+ } => { <unit!($LHS) as Sub<unit!($($RHS)+)>>::Output };
+    { $LHS:tt * $($RHS:tt)+ } => { <unit!($LHS) as Mul<unit!($($RHS)+)>>::Output };
+    { $LHS:tt / $($RHS:tt)+ } => { <unit!($LHS) as Div<unit!($($RHS)+)>>::Output };
+    { $LHS:ty } => { $LHS };
+}
+
 /**
 Create a unit system.
 
@@ -262,17 +273,3 @@ macro_rules! __make_base_types {
         pub type $Type = $System<$($Zeros,)* $Root>;
         );
 }
-
-// #[macro_export]
-// macro_rules! make_derived {
-//     ($derived_constant:ident: $Derived:ident = $FirstType:ident $($op:tt $Type:ident)*) => (
-//         pub type $Derived = __convert_expression!($FirstType $($op $Type)*);
-//         );
-// }
-
-// #[macro_export]
-// macro_rules! __convert_expression {
-//     ($a:ident * $NextType:ident $($op:tt $Type:ident)*) => (<$a as Mul<__convert_expression!($NextType $($op $Type)*)>>::Output);
-//     ($a:ident / $NextType:ident $($op:tt $Type:ident)*) => (<$a as Div<__convert_expression!($NextType $($op $Type)*)>>::Output);
-//     ($a:ty) => ($a);
-// }
